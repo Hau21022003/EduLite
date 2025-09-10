@@ -1,0 +1,17 @@
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { CustomValidationPipe } from 'src/common/pipes/validation-exception.pipe';
+import { useContainer } from 'class-validator';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(CustomValidationPipe);
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
+    credentials: true,
+  });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();
