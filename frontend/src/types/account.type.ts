@@ -8,5 +8,4 @@ export type Account = {
   role: Role;
   isActive: boolean;
   createdAt: string;
-  // contactDetails: ContactDetailsSchema.optional(),
 };

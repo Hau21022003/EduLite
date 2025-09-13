@@ -48,6 +48,7 @@ export const authStorage = {
   },
 
   clear() {
+    console.log("clear")
     storage.remove(USER_KEY);
     storage.remove(SESSION_TOKEN_KEY);
   },

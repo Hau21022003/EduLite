@@ -154,14 +154,16 @@ const http = {
   },
   post<Response>(
     url: string,
-    body: BodyInit | null | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any,
     options?: Omit<CustomOptions, "body"> | undefined
   ) {
     return request<Response>("POST", url, { ...options, body });
   },
   put<Response>(
     url: string,
-    body: BodyInit | null | undefined,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    body: any,
     options?: Omit<CustomOptions, "body"> | undefined
   ) {
     return request<Response>("PUT", url, { ...options, body });

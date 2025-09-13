@@ -8,6 +8,9 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { IsExistConstraint } from 'src/common/validators/is-exist-constraint.validator';
 import { UsersModule } from 'src/modules/users/users.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { CourseModule } from 'src/modules/course/course.module';
+import { DownloadModule } from 'src/modules/download/download.module';
+import { UploadModule } from 'src/modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { AuthModule } from 'src/auth/auth.module';
     MongooseModule.forRoot(mongooseConfig.uri),
     UsersModule,
     AuthModule,
+    CourseModule,
+    DownloadModule,
+    UploadModule,
   ],
   providers: [
     AppService,
