@@ -17,7 +17,7 @@ const AdminSidebar = () => {
       icon: <Blocks className="w-6 h-6" />,
       label: "Courses",
       url: "/admin/courses",
-      active: pathname.includes("course"),
+      active: pathname.includes("course") || pathname.includes("lessons"),
     },
   ];
 

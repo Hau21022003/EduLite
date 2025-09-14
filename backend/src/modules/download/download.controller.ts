@@ -8,7 +8,7 @@ import { DownloadService } from 'src/modules/download/download.service';
 export class DownloadController {
   constructor(private readonly downloadService: DownloadService) {}
   @Get('*')
-  async downloadImage(@Param() params, @Res() res: Response) {
+  async download(@Param() params, @Res() res: Response) {
     const filePath = params[0];
     const {
       stream,

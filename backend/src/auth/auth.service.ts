@@ -38,7 +38,11 @@ export class AuthService {
   }
 
   async signIn(user: UserDocument) {
-    const tokens = await this.getTokens(user._id.toString(), user.email, user.role);
+    const tokens = await this.getTokens(
+      user._id.toString(),
+      user.email,
+      user.role,
+    );
     await this.updateRefreshToken(user._id.toString(), tokens.refreshToken);
     return {
       account: user,
@@ -207,7 +211,10 @@ export class AuthService {
       userExists.email,
       userExists.role,
     );
-    await this.updateRefreshToken(userExists._id.toString(), tokens.refreshToken);
+    await this.updateRefreshToken(
+      userExists._id.toString(),
+      tokens.refreshToken,
+    );
     return {
       account: userExists,
       ...tokens,

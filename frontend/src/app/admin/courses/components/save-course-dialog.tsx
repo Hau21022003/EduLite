@@ -24,7 +24,7 @@ import { useCourseDialogStore } from "@/app/admin/courses/store/use-course-dialo
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useUploadImage } from "@/hooks/use-upload-image";
+import { useUploadFile } from "@/hooks/use-upload-file";
 import { handleErrorApi } from "@/lib/error";
 import { courseApiRequest } from "@/api-requests/course";
 
@@ -33,7 +33,7 @@ export default function SaveCourseDialog({
 }: {
   resetCourses: () => void;
 }) {
-  const { fileInputRef, handleFileChange, openFileDialog } = useUploadImage();
+  const { fileInputRef, handleFileChange, openFileDialog } = useUploadFile();
   const {
     handleCloseCourseDialog,
     openCourseDialog,

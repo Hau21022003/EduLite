@@ -11,6 +11,8 @@ import { AuthModule } from 'src/auth/auth.module';
 import { CourseModule } from 'src/modules/course/course.module';
 import { DownloadModule } from 'src/modules/download/download.module';
 import { UploadModule } from 'src/modules/upload/upload.module';
+import { QuizzesModule } from 'src/modules/quizzes/quizzes.module';
+import { LecturesModule } from 'src/modules/lectures/lectures.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { UploadModule } from 'src/modules/upload/upload.module';
     CourseModule,
     DownloadModule,
     UploadModule,
+    LecturesModule,
+    QuizzesModule,
   ],
   providers: [
     AppService,

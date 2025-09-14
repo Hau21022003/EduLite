@@ -70,7 +70,7 @@ export default function CourseList({
             </div>
             <div className="shrink-0 flex gap-4 items-start">
               <Link
-                href={`/admin/${course._id}/lessons`}
+                href={`/admin/${course._id}/lectures`}
                 className="cursor-pointer font-medium px-4 h-10 flex items-center leading-none bg-gray-300 rounded-lg"
               >
                 Lessons
