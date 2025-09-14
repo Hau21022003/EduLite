@@ -10,7 +10,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
 import { CreateLectureInput } from "@/schemas/lecture.schema";
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useUploadFile } from "@/hooks/use-upload-file";
 

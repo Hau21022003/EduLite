@@ -19,7 +19,6 @@ export const CreateAnswerSchema = z.object({
 });
 
 export const CreateQuestionSchema = z.object({
-  // quiz: z.string().min(1, "Quiz ID is required"), // MongoId dạng string
   content: z.string().min(1, "Question content is required"),
   audioUrl: z.string().optional(),
   questionType: z.enum(QuestionType),
@@ -41,6 +40,7 @@ export const CreateLectureSchema = z.object({
   description: z.string().optional(),
   contentType: z.enum(ContentType),
   contentUrl: z.string().optional(),
+  fileUrls: z.array(z.string()).optional(),
   orderIndex: z.number().default(0).optional(),
   quiz: CreateQuizSchema.optional(),
 });

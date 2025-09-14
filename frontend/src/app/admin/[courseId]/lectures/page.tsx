@@ -21,10 +21,10 @@ export default function LessonsPage() {
         </div>
         <div className="flex items-start gap-4">
           <div className="flex-1 lg:flex-none lg:w-100 bg-white rounded-xl p-4 space-y-2">
-            <LessonList lectures={lectures} />
+            <LessonList lectures={lectures} fetchLectures={fetchLectures} />
             <button
               onClick={() => handleOpenSaveLesson()}
-              className="leading-none w-full text-center py-3 bg-indigo-400 rounded-md font-medium text-white"
+              className="cursor-pointer leading-none w-full text-center py-3 bg-indigo-400 rounded-md font-medium text-white"
             >
               Add New Lecture
             </button>

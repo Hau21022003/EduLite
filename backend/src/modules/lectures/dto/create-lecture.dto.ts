@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsEnum,
   IsMongoId,
   IsNotEmpty,
@@ -33,6 +34,10 @@ export class CreateLectureDto {
   @IsString()
   @IsOptional()
   contentUrl?: string;
+
+  @IsArray()
+  @IsOptional()
+  fileUrls?: string[];
 
   @IsNumber()
   @IsNotEmpty()

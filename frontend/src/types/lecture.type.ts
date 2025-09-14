@@ -4,8 +4,9 @@ export type Lecture = {
   _id: string;
   course: string;
   title: string;
-  description: string;
+  description?: string;
   contentType: ContentType;
-  contentUrl: string;
+  contentUrl?: string;
+  fileUrls?: string[];
   orderIndex: number;
 };

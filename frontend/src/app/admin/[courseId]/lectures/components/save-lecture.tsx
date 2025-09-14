@@ -1,5 +1,6 @@
 "use client";
 import { lectureApiRequest } from "@/api-requests/lecture";
+import SaveFile from "@/app/admin/[courseId]/lectures/components/save-file";
 import SaveVideo from "@/app/admin/[courseId]/lectures/components/save-video";
 import { useSaveLectureStore } from "@/app/admin/[courseId]/lectures/stores/save-lecture-store";
 import {
@@ -20,9 +21,11 @@ import { UseFormReturn } from "react-hook-form";
 export default function SaveLecture({
   form,
   fetchLectures,
+  resetForm,
 }: {
   form: UseFormReturn<CreateLectureInput>;
   fetchLectures: () => void;
+  resetForm: () => void;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const { handleCloseSaveLesson, isEdit, selectedLessonId } =
@@ -31,7 +34,7 @@ export default function SaveLecture({
     if (data.contentType === ContentType.VIDEO && !data.contentUrl) {
       throw new Error("Video is required");
     }
-    if (data.contentType === ContentType.FILE && !data.contentUrl) {
+    if (data.contentType === ContentType.FILE && !data.fileUrls?.length) {
       throw new Error("File is required");
     }
   };
@@ -47,7 +50,7 @@ export default function SaveLecture({
       }
       fetchLectures();
       handleCloseSaveLesson();
-      form.reset({ contentType: ContentType.VIDEO });
+      resetForm();
     } catch (error) {
       handleErrorApi({ error, duration: 3000 });
     } finally {
@@ -56,16 +59,16 @@ export default function SaveLecture({
   };
 
   const removeLecture = async () => {
+    if (!selectedLessonId) return;
     try {
+      await lectureApiRequest.remove(selectedLessonId);
       fetchLectures();
+      resetForm();
+      handleCloseSaveLesson();
     } catch (error) {
       handleErrorApi({ error });
     }
   };
-
-  useEffect(() => {
-    form.setValue("contentUrl", undefined);
-  }, [form.watch("contentType")]);
 
   return (
     <Form {...form}>
@@ -126,10 +129,13 @@ export default function SaveLecture({
         {form.watch("contentType") === ContentType.VIDEO && (
           <SaveVideo form={form} />
         )}
-        <div className="flex gap-4">
+        {form.watch("contentType") === ContentType.FILE && (
+          <SaveFile form={form} />
+        )}
+        <div className="flex gap-4 flex-col sm:flex-row">
           <button
             type="submit"
-            className="gap-2 cursor-pointer h-10 px-4 rounded-md bg-indigo-400 text-white flex items-center leading-none"
+            className="w-full sm:w-fit gap-2 cursor-pointer h-10 px-4 rounded-md bg-indigo-400 text-white flex items-center justify-center leading-none"
           >
             {isLoading && <Loader2 className="h-5 w-5 animate-spin" />}
             <p>Save Changes</p>
@@ -138,7 +144,7 @@ export default function SaveLecture({
             <button
               onClick={() => removeLecture()}
               type="button"
-              className="cursor-pointer h-10 px-4 border-2 border-gray-300 rounded-md flex items-center leading-none"
+              className="w-full sm:w-fit cursor-pointer h-10 px-4 border-2 border-gray-300 rounded-md flex items-center justify-center leading-none"
             >
               Remove
             </button>

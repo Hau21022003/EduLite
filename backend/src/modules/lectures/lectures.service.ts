@@ -28,7 +28,9 @@ export class LecturesService {
     ) {
       throw new BadRequestException('Quiz is required');
     }
-    const created = new this.lectureModel(createLectureDto);
+    const orderIndex = await this.getOrderIndex(createLectureDto.course);
+
+    const created = new this.lectureModel({ ...createLectureDto, orderIndex });
     await created.save();
     if (createLectureDto.contentType === ContentType.QUIZ) {
       await this.quizzesService.create(
@@ -39,6 +41,32 @@ export class LecturesService {
     return created;
   }
 
+  async getOrderIndex(courseId: string) {
+    const lecture = await this.lectureModel
+      .findOne({
+        course: new Types.ObjectId(courseId),
+      })
+      .sort({ orderIndex: -1 });
+    return lecture ? lecture.orderIndex + 1 : 1;
+  }
+
+  async swapOrder(lectureId1: string, lectureId2: string) {
+    const lecture1 = await this.lectureModel.findById(lectureId1);
+    const lecture2 = await this.lectureModel.findById(lectureId2);
+
+    if (!lecture1 || !lecture2) {
+      throw new NotFoundException('Lecture not found');
+    }
+
+    // tráo đổi orderIndex
+    const temp = lecture1.orderIndex;
+    lecture1.orderIndex = lecture2.orderIndex;
+    lecture2.orderIndex = temp;
+
+    await Promise.all([lecture1.save(), lecture2.save()]);
+    return { lecture1, lecture2 };
+  }
+
   findAll() {
     return `This action returns all lectures`;
   }
@@ -46,6 +74,7 @@ export class LecturesService {
   findByCourse(courseId: string) {
     return this.lectureModel
       .find({ course: new Types.ObjectId(courseId) })
+      .sort({ orderIndex: 1, createdAt: -1 })
       .lean();
   }
 
@@ -54,23 +83,40 @@ export class LecturesService {
   }
 
   async update(id: string, updateLectureDto: CreateLectureDto) {
-    // return `This action updates a #${id} lecture`;
     const lecture = await this.lectureModel.findById(id);
     if (!lecture) {
       throw new NotFoundException('Lecture not found');
     }
+    if (
+      updateLectureDto.contentType === ContentType.QUIZ &&
+      !updateLectureDto.quiz
+    ) {
+      throw new BadRequestException('Quiz is required');
+    }
+
     if (lecture.contentType === ContentType.QUIZ) {
       // Xoa quiz
+      await this.quizzesService.removeByLecture(id);
     }
     if (updateLectureDto.contentType === ContentType.QUIZ) {
       // Them quiz
+      await this.quizzesService.create(id, updateLectureDto.quiz);
     }
     lecture.set(updateLectureDto);
     await lecture.save();
     return lecture;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} lecture`;
+  async remove(id: string) {
+    const lecture = await this.lectureModel.findById(id);
+    if (!lecture) {
+      throw new NotFoundException('Lecture not found');
+    }
+    if (lecture.contentType === ContentType.QUIZ) {
+      // Xoa quiz
+      await this.quizzesService.removeByLecture(id);
+    }
+    await lecture.deleteOne();
+    return lecture;
   }
 }

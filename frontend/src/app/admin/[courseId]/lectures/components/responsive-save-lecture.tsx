@@ -12,7 +12,7 @@ import { handleErrorApi } from "@/lib/error";
 import { ContentType, CreateLectureSchema } from "@/schemas/lecture.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function ResponsiveSaveLecture({
@@ -27,8 +27,17 @@ export default function ResponsiveSaveLecture({
   const params = useParams<{ courseId: string }>();
   const { selectedLessonId } = useSaveLectureStore();
 
+  const resetForm = useCallback(() => {
+    form.reset({
+      contentType: ContentType.VIDEO,
+      course: params.courseId,
+      description: undefined,
+      title: "",
+    });
+  }, [params]);
+
   useEffect(() => {
-    form.reset({ contentType: ContentType.VIDEO, course: params.courseId });
+    resetForm();
   }, [params]);
 
   useEffect(() => {
@@ -43,7 +52,7 @@ export default function ResponsiveSaveLecture({
     if (selectedLessonId) {
       fetchLecture(selectedLessonId);
     } else {
-      form.reset({ contentType: ContentType.VIDEO });
+      resetForm();
     }
   }, [selectedLessonId]);
 
@@ -63,7 +72,11 @@ export default function ResponsiveSaveLecture({
 
   return isLg ? (
     <div className="flex-1 bg-white rounded-lg p-4 min-w-0">
-      <SaveLecture form={form} fetchLectures={fetchLectures} />
+      <SaveLecture
+        resetForm={resetForm}
+        form={form}
+        fetchLectures={fetchLectures}
+      />
     </div>
   ) : (
     <Dialog open={open} onOpenChange={handleCloseSaveLesson}>
@@ -71,7 +84,11 @@ export default function ResponsiveSaveLecture({
         <DialogHeader>
           <DialogTitle className="uppercase">Order details</DialogTitle>
         </DialogHeader>
-        <SaveLecture form={form} fetchLectures={fetchLectures} />
+        <SaveLecture
+          form={form}
+          fetchLectures={fetchLectures}
+          resetForm={resetForm}
+        />
       </DialogContent>
     </Dialog>
   );

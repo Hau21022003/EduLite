@@ -10,4 +10,8 @@ export const lectureApiRequest = {
   findByCourse: (courseId: string) =>
     http.get<Lecture[]>(`${BASE_URL}/course/${courseId}`),
   findOne: (lectureId: string) => http.get<Lecture>(`${BASE_URL}/${lectureId}`),
+  remove: (lectureId: string) =>
+    http.delete<Lecture>(`${BASE_URL}/${lectureId}`),
+  swapOrder: (lectureId1: string, lectureId2: string) =>
+    http.put(`${BASE_URL}/swap/${lectureId1}/${lectureId2}`),
 };

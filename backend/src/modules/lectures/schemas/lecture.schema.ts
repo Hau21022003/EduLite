@@ -29,7 +29,10 @@ export class Lecture {
   @Prop()
   contentUrl?: string;
 
-  @Prop({ required: true })
+  @Prop()
+  fileUrls?: string[];
+
+  @Prop({ required: true, default: 0 })
   orderIndex: number;
 }
 

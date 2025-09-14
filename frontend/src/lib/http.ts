@@ -163,7 +163,7 @@ const http = {
   put<Response>(
     url: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    body: any,
+    body?: any,
     options?: Omit<CustomOptions, "body"> | undefined
   ) {
     return request<Response>("PUT", url, { ...options, body });

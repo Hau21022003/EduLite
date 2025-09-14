@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { LecturesService } from './lectures.service';
 import { CreateLectureDto } from './dto/create-lecture.dto';
@@ -30,6 +31,14 @@ export class LecturesController {
     return this.lecturesService.findOne(id);
   }
 
+  @Put('swap/:lectureId1/:lectureId2')
+  async swapLectures(
+    @Param('lectureId1') lectureId1: string,
+    @Param('lectureId2') lectureId2: string,
+  ) {
+    return this.lecturesService.swapOrder(lectureId1, lectureId2);
+  }
+
   @Put(':id')
   update(@Param('id') id: string, @Body() updateLectureDto: CreateLectureDto) {
     return this.lecturesService.update(id, updateLectureDto);
@@ -37,6 +46,6 @@ export class LecturesController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.lecturesService.remove(+id);
+    return this.lecturesService.remove(id);
   }
 }
