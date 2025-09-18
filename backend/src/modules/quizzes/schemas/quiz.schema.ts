@@ -21,3 +21,12 @@ export class Quiz {
 
 export type QuizDocument = HydratedDocument<Quiz>;
 export const QuizSchema = SchemaFactory.createForClass(Quiz);
+
+QuizSchema.virtual('questions', {
+  ref: 'Question',
+  localField: '_id',
+  foreignField: 'quiz',
+});
+
+QuizSchema.set('toObject', { virtuals: true });
+QuizSchema.set('toJSON', { virtuals: true });

@@ -19,23 +19,13 @@ export class QuizzesService {
     const quiz = new this.quizModel({ ...quizData, lecture: lectureId });
     await quiz.save();
 
-    for (const questionDto of questions) {
-      const { answers, ...questionData } = questionDto;
-      const question = new this.questionModel({
-        ...questionData,
-        quiz: quiz._id,
-      });
-      await question.save();
-
-      // 3. Tạo answers
-      for (const answerDto of answers) {
-        const answer = new this.answerModel({
-          ...answerDto,
-          question: question._id,
-        });
-        await answer.save();
-      }
-    }
+    const questionsData = questions.map((question, idx) => ({
+      ...question,
+      quiz: quiz._id,
+      orderIndex: idx,
+    }));
+    // await this.questionModel.
+    await this.questionModel.insertMany(questionsData);
 
     return quiz;
   }
@@ -44,49 +34,15 @@ export class QuizzesService {
     return `This action returns all quizzes`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} quiz`;
+  findOneByLecture(lectureId: string) {
+    return this.quizModel
+      .findOne({ lecture: new Types.ObjectId(lectureId) })
+      .populate({
+        path: 'questions',
+        options: { sort: { orderIndex: 1 } },
+      })
+      .exec();
   }
-
-  // async updateQuiz(id: string, updateQuizDto: CreateQuizDto) {
-  //   const quiz = await this.quizModel.findById(id);
-  //   if (!quiz) {
-  //     throw new NotFoundException('Quiz not found');
-  //   }
-
-  //   const { questions, ...quizData } = updateQuizDto;
-
-  //   // Update quiz info
-  //   quiz.set(quizData);
-  //   await quiz.save();
-
-  //   // Xoá questions cũ
-  //   const oldQuestions = await this.questionModel.find({ quiz: quiz._id });
-  //   for (const q of oldQuestions) {
-  //     await this.answerModel.deleteMany({ question: q._id });
-  //   }
-  //   await this.questionModel.deleteMany({ quiz: quiz._id });
-
-  //   // Tạo lại questions + answers
-  //   for (const questionDto of questions) {
-  //     const { answers, ...questionData } = questionDto;
-  //     const question = new this.questionModel({
-  //       ...questionData,
-  //       quiz: quiz._id,
-  //     });
-  //     await question.save();
-
-  //     for (const answerDto of answers) {
-  //       const answer = new this.answerModel({
-  //         ...answerDto,
-  //         question: question._id,
-  //       });
-  //       await answer.save();
-  //     }
-  //   }
-
-  //   return quiz;
-  // }
 
   async removeByLecture(lectureId: string) {
     const quiz = await this.quizModel.findOne({
@@ -96,9 +52,9 @@ export class QuizzesService {
       throw new NotFoundException('Quiz not found');
     }
     // Xoa question va answer cua quiz
-    const oldQuestions = await this.questionModel.find({ quiz: quiz._id });
-    const questionIds = oldQuestions.map((q) => q._id);
-    await this.answerModel.deleteMany({ question: { $in: questionIds } });
+    // const oldQuestions = await this.questionModel.find({ quiz: quiz._id });
+    // const questionIds = oldQuestions.map((q) => q._id);
+    // await this.answerModel.deleteMany({ question: { $in: questionIds } });
     await this.questionModel.deleteMany({ quiz: quiz._id });
     await quiz.deleteOne();
     return quiz;

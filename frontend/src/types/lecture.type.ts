@@ -1,4 +1,4 @@
-import { ContentType } from "@/schemas/lecture.schema";
+import { ContentType, CreateQuizInput } from "@/schemas/lecture.schema";
 
 export type Lecture = {
   _id: string;
@@ -9,4 +9,5 @@ export type Lecture = {
   contentUrl?: string;
   fileUrls?: string[];
   orderIndex: number;
+  quiz?: CreateQuizInput;
 };

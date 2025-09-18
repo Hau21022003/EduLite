@@ -1,6 +1,8 @@
+import { cn } from "@/lib/utils";
+
 interface RadioItemProps {
   value: string;
-  label: string;
+  label?: string;
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -12,7 +14,7 @@ export default function RadioItem({
   onChange,
 }: RadioItemProps) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer">
+    <label className={cn(label && "flex items-center gap-3", "cursor-pointer")}>
       <div className="relative">
         <input
           type="radio"
@@ -36,9 +38,11 @@ export default function RadioItem({
           )}
         </div>
       </div>
-      <span className="font-normal text-sm text-black leading-0">
-        {label}
-      </span>
+      {label && (
+        <span className="font-normal text-sm text-black leading-0">
+          {label}
+        </span>
+      )}
     </label>
   );
 }

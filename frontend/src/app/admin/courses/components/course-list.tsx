@@ -5,6 +5,12 @@ import { handleErrorApi } from "@/lib/error";
 import { cn } from "@/lib/utils";
 import { Course } from "@/types/course.type";
 import { formatDateWithRelative } from "@/utils/time";
+import {
+  faClapperboard,
+  faPen,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Check, Clock } from "lucide-react";
 import Link from "next/link";
 import React, { Fragment } from "react";
@@ -71,21 +77,28 @@ export default function CourseList({
             <div className="shrink-0 flex gap-4 items-start">
               <Link
                 href={`/admin/${course._id}/lectures`}
-                className="cursor-pointer font-medium px-4 h-10 flex items-center leading-none bg-gray-300 rounded-lg"
+                title="Lessons"
+                className="cursor-pointer font-medium w-10 h-10 flex items-center justify-center leading-none bg-yellow-400 rounded-md"
               >
-                Lessons
+                <FontAwesomeIcon
+                  icon={faClapperboard}
+                  size="lg"
+                  className="w-7 h-7"
+                />
               </Link>
               <button
+                title="Edit"
                 onClick={() => handleOpenCourseDialog(course._id)}
-                className="cursor-pointer font-medium px-4 h-10 flex items-center leading-none bg-[#8CCDEB] rounded-lg"
+                className="cursor-pointer font-medium w-10 h-10 flex items-center justify-center leading-none bg-indigo-500 text-white rounded-md"
               >
-                Edit
+                <FontAwesomeIcon icon={faPen} size="lg" className="w-7 h-7" />
               </button>
               <button
+                title="Delete"
                 onClick={() => deleteCourse(course._id)}
-                className="cursor-pointer font-medium px-4 h-10 flex items-center leading-none bg-red-400 rounded-lg"
+                className="cursor-pointer font-medium w-10 h-10 flex items-center justify-center leading-none bg-black text-white rounded-md"
               >
-                Delete
+                <FontAwesomeIcon icon={faTrash} size="lg" className="w-7 h-7" />
               </button>
             </div>
           </div>

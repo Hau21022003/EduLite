@@ -78,8 +78,16 @@ export class LecturesService {
       .lean();
   }
 
-  findOne(id: string) {
-    return this.lectureModel.findById(id).lean();
+  async findOne(id: string) {
+    const lecture: any = await this.lectureModel.findById(id).lean();
+    if (!lecture) {
+      throw new NotFoundException('Lecture not found');
+    }
+    if (lecture.contentType === ContentType.QUIZ) {
+      const quiz = await this.quizzesService.findOneByLecture(id);
+      lecture.quiz = quiz;
+    }
+    return lecture;
   }
 
   async update(id: string, updateLectureDto: CreateLectureDto) {

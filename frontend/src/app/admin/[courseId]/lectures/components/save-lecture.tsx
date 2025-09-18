@@ -1,6 +1,8 @@
 "use client";
 import { lectureApiRequest } from "@/api-requests/lecture";
 import SaveFile from "@/app/admin/[courseId]/lectures/components/save-file";
+// import SaveQuiz from "@/app/admin/[courseId]/lectures/components/save-quiz/index";
+import SaveQuiz from "@/app/admin/[courseId]/lectures/components/save-quiz";
 import SaveVideo from "@/app/admin/[courseId]/lectures/components/save-video";
 import { useSaveLectureStore } from "@/app/admin/[courseId]/lectures/stores/save-lecture-store";
 import {
@@ -15,7 +17,7 @@ import { handleErrorApi } from "@/lib/error";
 import { cn } from "@/lib/utils";
 import { ContentType, CreateLectureInput } from "@/schemas/lecture.schema";
 import { Lightbulb, Loader2, Paperclip, TvMinimalPlay } from "lucide-react";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 
 export default function SaveLecture({
@@ -36,6 +38,10 @@ export default function SaveLecture({
     }
     if (data.contentType === ContentType.FILE && !data.fileUrls?.length) {
       throw new Error("File is required");
+    }
+    if (data.contentType === ContentType.QUIZ) {
+      if (!data.quiz) throw new Error("Quiz is required");
+      if (!data.quiz.questions.length) throw new Error("Questions is required");
     }
   };
 
@@ -131,6 +137,9 @@ export default function SaveLecture({
         )}
         {form.watch("contentType") === ContentType.FILE && (
           <SaveFile form={form} />
+        )}
+        {form.watch("contentType") === ContentType.QUIZ && (
+          <SaveQuiz form={form} />
         )}
         <div className="flex gap-4 flex-col sm:flex-row">
           <button

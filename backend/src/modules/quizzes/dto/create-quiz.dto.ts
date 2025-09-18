@@ -13,13 +13,21 @@ import { IsExists } from 'src/common/validators/is-exist-constraint.validator';
 import { Lecture } from 'src/modules/lectures/schemas/lecture.schema';
 import { QuestionType } from 'src/modules/quizzes/schemas/question.schema';
 
-export class CreateAnswerDto {
-  @IsString()
-  content: string;
+// export class CreateAnswerDto {
+//   @IsString()
+//   content: string;
 
-  @IsBoolean()
-  @IsOptional()
-  isCorrect?: boolean = false;
+//   @IsBoolean()
+//   @IsOptional()
+//   isCorrect?: boolean = false;
+// }
+
+export class CreateAnswerDto {
+  @IsNumber()
+  position: number;
+
+  @IsString()
+  accepted: string;
 }
 
 export class CreateQuestionDto {
@@ -36,12 +44,39 @@ export class CreateQuestionDto {
   @IsEnum(QuestionType)
   questionType: QuestionType;
 
-  @IsNumber()
-  orderIndex: number;
+  // @IsNumber()
+  // orderIndex: number;
 
+  // @IsOptional()
+  // @IsString()
+  // correctAnswer?: string;
+
+  // @IsArray()
+  // @ValidateNested({ each: true })
+  // @Type(() => CreateAnswerDto)
+  // answers: CreateAnswerDto[];
+  @IsArray()
   @IsOptional()
-  @IsString()
-  correctAnswer?: string;
+  options?: string[]; // Chỉ dùng cho single/multi
+
+  @IsNumber()
+  @IsOptional()
+  correctAnswer?: number; // single_choice, true_false
+
+  @IsArray()
+  @IsOptional()
+  correctAnswers?: number[]; // multiple_choice
+
+  // @Prop({
+  //   type: [
+  //     {
+  //       position: { type: Number },
+  //       accepted: { type: [String] },
+  //     },
+  //   ],
+  //   default: [],
+  // })
+  // answers?: { position: number; accepted: string }[];
 
   @IsArray()
   @ValidateNested({ each: true })
@@ -50,9 +85,9 @@ export class CreateQuestionDto {
 }
 
 export class CreateQuizDto {
-  @IsMongoId()
-  @IsExists(Lecture)
-  lecture: string;
+  // @IsMongoId()
+  // @IsExists(Lecture)
+  // lecture: string;
 
   @IsOptional()
   @IsNumber()

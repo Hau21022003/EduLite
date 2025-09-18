@@ -6,7 +6,7 @@ export enum QuestionType {
   SINGLE_CHOICE = 'SINGLE_CHOICE',
   MULTIPLE_CHOICE = 'MULTIPLE_CHOICE',
   TRUE_FALSE = 'TRUE_FALSE',
-  TEXT = 'TEXT',
+  FILL_IN_BLANK = 'FILL_IN_BLANK',
 }
 
 @Schema({ timestamps: true })
@@ -34,8 +34,25 @@ export class Question {
   @Prop({ required: true })
   orderIndex: number;
 
-  @Prop()
-  correctAnswer: string; // dung cho trả lời dạng text
+  @Prop({ type: [String], default: [] })
+  options?: string[]; // Chỉ dùng cho single/multi
+
+  @Prop({ type: Number })
+  correctAnswer?: number; // single_choice, true_false
+
+  @Prop({ type: [Number] })
+  correctAnswers?: number[]; // multiple_choice
+
+  @Prop({
+    type: [
+      {
+        position: { type: Number },
+        accepted: { type: String },
+      },
+    ],
+    default: [],
+  })
+  answers?: { position: number; accepted: string }[]; // fill_in_blank
 }
 
 export type QuestionDocument = HydratedDocument<Question>;
